@@ -22,6 +22,7 @@ Section "Device"
     Identifier  "iGPU"
     Driver      "modesetting"
     BusID       "PCI:101:0:0"
+    Option      "PageFlip" "off"
 EndSection
 
 Section "Screen"
@@ -51,6 +52,7 @@ Section "Device"
     Identifier  "iGPU"
     Driver      "modesetting"
     BusID       "PCI:101:0:0"
+    Option      "PageFlip" "off"
 EndSection
 
 Section "Screen"
