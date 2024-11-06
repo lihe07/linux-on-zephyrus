@@ -16,7 +16,7 @@ My model is G16 Air Ryzen AI 9 version.
 
   `supergfxctl` and `optimus-manager` are not needed.
 
-- Driver: `nvidia` (proprietary). Do not install any xorg-drivers like `xf86-video-amdgpu`.
+- Driver: `nvidia` (proprietary). No need to install any xorg-drivers like `xf86-video-amdgpu`. `modesetting` driver is used for iGPU.
 
 ## Configuration
 
@@ -40,6 +40,12 @@ If you need tty consoles to show up on internal display + iGPU connected monitor
 If you see a black screen / SDDM only shows up on some displays, add `xrandr --auto` to `/usr/share/sddm/scripts/Xsetup`.
 
 This automatically scans for connected monitors and enables them.
+
+- Xorg:
+
+Random screen freezing while in integrated mode can be resolved by disabling PageFlip.
+
+This is already the default config in my scripts.
 
 ## Scripts
 
