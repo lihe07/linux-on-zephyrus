@@ -49,15 +49,17 @@ This is already the default config in my scripts.
 
 ## Scripts
 
-- `./pcie_down.sh`: powers off dGPU entirely with PCIE power control. 
+- `./pcie_down.sh`: powers off dGPU completely with PCIE power control. 
 
 The results are similar as putting dGPU into `D3Cold` state, but prevents random power boosts with NVIDIA power management.
 
 To re-enable dGPU, run any program that uses your NVIDIA card, and `pciehp` should automatically power up dGPU again.
 
-Or simply run `cat /sys/bus/pci/slots/0-2/power`
+Or you can use `pcie_up.sh` to manually power it up.
 
-- `./optimus.sh`: toggles Xorg GPU usage
+- `./pcie_up.sh`: powers on dGPU. Counterpart of `pcie_down.sh`.
+
+- `./optimus.sh`: toggles Xorg GPU mode.
 
 This script controls Xorg to either use iGPU only or both GPUs.
 
@@ -71,7 +73,7 @@ Also, any displays connected to dGPU would not work (like HDMI).
 
 In hybrid mode, dGPU is activated and Xorg will be using it. All the monitors should work without any problems.
 
-- `./powernow.sh`: checks current power consumption
+- `./powernow.sh`: checks current battery power consumption.
 
 Unplug the laptop and run it. It should give something like this:
 
@@ -80,3 +82,4 @@ D3Cold
 D0
 7.821 W
 ```
+
