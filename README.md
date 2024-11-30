@@ -59,6 +59,10 @@ Or you can use `pcie_up.sh` to manually power it up.
 
 - `./pcie_up.sh`: powers on dGPU. Counterpart of `pcie_down.sh`.
 
+- `./auto_gpu_power.sh`: automatically powers on/off dGPU based on Xorg mode.
+
+  Add it to places like `/usr/share/sddm/scripts/Xsetup` if you want to automatically power off dGPU when in integrated mode.
+
 - `./optimus.sh`: toggles Xorg GPU mode.
 
 This script controls Xorg to either use iGPU only or both GPUs.
