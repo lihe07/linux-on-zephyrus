@@ -24,7 +24,7 @@ My model is G16 Air Ryzen AI 9 version.
 
 Create `/etc/modprobe.d/nvidia.conf` file, write following config:
 
-```
+```sh
 blacklist nouveau
 
 options nvidia NVreg_DynamicPowerManagement=0x02
@@ -49,7 +49,7 @@ This is already the default config in my scripts.
 
 ## Scripts
 
-- `./pcie_down.sh`: powers off dGPU completely with PCIE power control. 
+- `./pcie_down.sh`: powers off dGPU completely with PCIE power control.
 
 The results are similar as putting dGPU into `D3Cold` state, but prevents random power boosts with NVIDIA power management.
 
@@ -77,9 +77,89 @@ In hybrid mode, dGPU is activated and Xorg will be using it. All the monitors sh
 
 Unplug the laptop and run it. It should give something like this:
 
-```
+```text
 D3Cold
 D0
 7.821 W
 ```
 
+## Improve Battery Life
+
+There are some tips to improve battery life further. It's recommended to use `tlp` to apply these tweaks.
+
+With these tweaks, the power consumption can be lowered to around 6W when idle, 7-9W when under normal load and maximum 15W when under heavy load.
+
+- Power off dGPU entirely with `pcie_down.sh` script.
+
+- Or enable Runtime D3 power management:
+
+  Follow the steps in NVIDIA Driver section.
+
+  Option `NVreg_DynamicPowerManagement` decides the power management mode.
+
+  - `0x02` is for fine-grained power management (recommended).
+
+  - `0x01` is for coarse power management.
+
+  For the difference, refer to [NVIDIA's documentation](https://download.nvidia.com/XFree86/Linux-x86_64/435.17/README/dynamicpowermanagement.html)
+
+- Set AMD iGPU DPM performance level to `low`
+
+  Highly recommended. This can save about 3W when idle and prevents sudden peaks in power usage when opening applications.
+
+  With `tlp`, you can add the following lines to the config:
+
+  ```py
+  RADEON_DPM_PERF_LEVEL_ON_AC=auto
+  RADEON_DPM_PERF_LEVEL_ON_BAT=low
+  ```
+
+- Disable CPU Frequency Boosting
+
+  Recommended. This lowers the peak frequency from 4.37 GHz to 2.0 GHz and saves a lot of power.
+
+  With `tlp`, add the following line to the config:
+
+  ```py
+  CPU_BOOST_ON_AC=1
+  CPU_BOOST_ON_BAT=0
+  ```
+
+  Note: further limiting the CPU frequency actually CANNOT save any significant power. Disabling boost is enough.
+
+- Set PCIE ASPM to `powersupersave`
+
+  Recommended. This can save about 1W.
+
+  With `tlp`, add the following lines to the config:
+
+  ```py
+  PCIE_ASPM_ON_AC=default
+  PCIE_ASPM_ON_BAT=powersupersave
+  ```
+
+- Set platform ACPI profile to `quiet`
+
+  This is the default behavior if you are using `asusctl`. With `tlp`, add the following lines to the config:
+
+  ```py
+  PLATFORM_PROFILE_ON_BAT=quiet
+  ```
+
+- Disable watchdog
+
+  NMI watchdog is by default disabled by `tlp`. You can further disable `sp5100_tco` watchdog by blacklisting it.
+  
+  Add the following line to `/etc/modprobe.d/disable-watchdog.conf`:
+
+  ```sh
+  blacklist sp5100_tco
+  ```
+
+- Set CPU EPP to `power`
+
+  Add the following line to the config:
+
+  ```py
+  CPU_ENERGY_PERF_POLICY_ON_BAT=power
+  ```
