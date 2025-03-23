@@ -116,6 +116,8 @@ case "$1" in
         ;;
 esac
 
+auto_gpu_power.sh
+
 # Ask user if they want to log out to apply changes
 read -p "Configuration changed. Do you want to log out to apply settings? (y/n): " response
 if [[ "$response" == "y" ]]; then
