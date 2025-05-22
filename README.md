@@ -167,3 +167,17 @@ With these tweaks, the power consumption can be lowered to around 6W when idle, 
   ```py
   CPU_ENERGY_PERF_POLICY_ON_BAT=power
   ```
+
+## Known Issues
+
+Some fixed issues are still displayed here for reference on older kernels.
+
+- [x] Kernel Oops: divide error in CalculateVMAndRowBytes
+
+  Fixed in 6.14 by [agd5f/linux@4408b59e](https://gitlab.freedesktop.org/agd5f/linux/-/commit/4408b59eeacfea777aae397177f49748cadde5ce), [agd5f/linux@afcdf51d](https://gitlab.freedesktop.org/agd5f/linux/-/commit/afcdf51d97cd58dd7a2e0aa8acbaea5108fa6826), [agd5f/linux@366e77cd](https://gitlab.freedesktop.org/agd5f/linux/-/commit/366e77cd4923c3aa45341e15dcaf3377af9b042f)
+
+- [x] USBC kworker/u96:1:13 hang after plugging in USBC devices
+
+  Fixed in 6.14. However display over USBC failed to work.
+
+- [ ] Aquamarine (Hyprland) crash
