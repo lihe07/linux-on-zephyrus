@@ -180,4 +180,10 @@ Some fixed issues are still displayed here for reference on older kernels.
 
   Fixed in 6.14. However display over USBC failed to work.
 
+- [x] Internal Microphone not working
+
+  Fixed in 6.15
+
 - [ ] Aquamarine (Hyprland) crash
+
+  Following at this [discussion](https://github.com/hyprwm/Hyprland/discussions/10248).
