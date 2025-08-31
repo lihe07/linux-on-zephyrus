@@ -4,6 +4,8 @@ Some scripts for better experience with your Zephyrus G16 Air.
 
 My model is G16 Air Ryzen AI 9 version.
 
+**NOTE:** I hard-coded PCIe addresses for GPUs in `optimus.sh`. If you have an **additional NVME drive**, please add all IDs by one. e.g. `PCI:101:0:0` becomes `PCI:102:0:0`
+
 ## Environment
 
 - OS: Any Arch based distro (I've tested archlinux & artixlinux). Other distros may also work.
@@ -86,6 +88,10 @@ D3Cold
 D0
 7.821 W
 ```
+
+- `./bright`: Adjust OLED brightness.
+
+By default, your window manager's brightness control should work. If not, try this script which adjusts AMDgpu's backlight control. The display can go maximum 500 nits brightness.
 
 ## Improve Battery Life
 

@@ -1,0 +1,54 @@
+#!/bin/python3
+
+import sys
+import os
+
+BRIGHTNESS_PATH = "/sys/class/backlight/amdgpu_bl1"
+MAX_BRIGHTNESS_FILE = os.path.join(BRIGHTNESS_PATH, "max_brightness")
+ACTUAL_BRIGHTNESS_FILE = os.path.join(BRIGHTNESS_PATH, "actual_brightness")
+BRIGHTNESS_FILE = os.path.join(BRIGHTNESS_PATH, "brightness")
+
+STEP_PERCENT = 0.05  # step size = 5% of max brightness
+
+def read_value(path):
+    with open(path, "r") as f:
+        return int(f.read().strip())
+
+def write_value(path, value):
+    with open(path, "w") as f:
+        f.write(str(value))
+
+def get_current_brightness():
+    return read_value(BRIGHTNESS_FILE)
+
+def get_max_brightness():
+    return read_value(MAX_BRIGHTNESS_FILE)
+
+def set_brightness(value):
+    max_brightness = get_max_brightness()
+    value = max(1, min(value, max_brightness))  # clamp between 1 and max
+    write_value(BRIGHTNESS_FILE, value)
+    print(f"Brightness set to {value}/{max_brightness} "
+          f"({value/max_brightness:.1%})")
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: script.py <Up|Down|+|->")
+        sys.exit(1)
+
+    current = get_current_brightness()
+    max_brightness = get_max_brightness()
+    step = int(max_brightness * STEP_PERCENT)
+
+    if sys.argv[1] in ["Up", "+"]:
+        new_value = current + step
+    elif sys.argv[1] in ["Down", "-"]:
+        new_value = current - step
+    else:
+        print("Invalid argument. Use 'Up', 'Down', '+', or '-'.")
+        sys.exit(1)
+
+    set_brightness(new_value)
+
+if __name__ == "__main__":
+    main()
