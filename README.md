@@ -4,19 +4,23 @@ Some scripts for better experience with your Zephyrus G16 Air.
 
 My model is G16 Air Ryzen AI 9 version.
 
-**NOTE:** I hard-coded PCIe addresses for GPUs in `optimus.sh`. If you have an **additional NVME drive**, please add all IDs by one. e.g. `PCI:101:0:0` becomes `PCI:102:0:0`
-
 ## Environment
 
 - OS: Any Arch based distro (I've tested archlinux & artixlinux). Other distros may also work.
 
-- WM & DE: Xfce4 (Wayland compositors do not work quite well. The internal display gives `InvalidMode`)
+- WM & DE: 
+
+  Most Xorg based WMs and DEs should work fine (i3, bspwm, dwm, xfce, kde, gnome etc).
+
+  Sway works if you set `WLR_DRM_DEVICES` to iGPU only.
+
+  Hyprland currently crashes.
 
 - Display Manager: SDDM, LightDM
 
 - Packages: `asusctl` for LEDs and profiles. `nvidia-prime` for `prime-run` util.
 
-  `supergfxctl` and `optimus-manager` are not needed.
+  `supergfxctl` for GPU switching
 
 - Driver: `nvidia` (proprietary). No need to install any xorg-drivers like `xf86-video-amdgpu`. `modesetting` driver is used for iGPU.
 
@@ -49,49 +53,16 @@ Random screen freezing while in integrated mode can be resolved by disabling Pag
 
 This is already the default config in my scripts.
 
+- Sway:
+
+Always set `WLR_DRM_DEVICES` to iGPU only, except in Mux dGPU mode.
+
 ## Scripts
 
-- `./pcie_down.sh`: powers off dGPU completely with PCIE power control.
+PCIE scripts are deprecated in favor of [SuperGFXCTL](https://gitlab.com/asus-linux/supergfxctl).
 
-The results are similar as putting dGPU into `D3Cold` state, but prevents random power boosts with NVIDIA power management.
+Brightness control can be done via brightnessctl
 
-To re-enable dGPU, run any program that uses your NVIDIA card, and `pciehp` should automatically power up dGPU again.
-
-Or you can use `pcie_up.sh` to manually power it up.
-
-- `./pcie_up.sh`: powers on dGPU. Counterpart of `pcie_down.sh`.
-
-- `./auto_gpu_power.sh`: automatically powers on/off dGPU based on Xorg mode.
-
-  Add it to places like `/usr/share/sddm/scripts/Xsetup` if you want to automatically power off dGPU when in integrated mode.
-
-- `./optimus.sh`: toggles Xorg GPU mode.
-
-This script controls Xorg to either use iGPU only or both GPUs.
-
-Usage: `sudo optimus.sh [integrated, hybrid]`
-
-In integrated mode, dGPU is invisible to Xorg and there should be no process running using dGPU (except if you PRIME offloaded any application).
-
-Therefore, the GPU should freely go into `D3Cold` state to save power. (Use `powernow.sh` to verify).
-
-Also, any displays connected to dGPU would not work (like HDMI).
-
-In hybrid mode, dGPU is activated and Xorg will be using it. All the monitors should work without any problems.
-
-- `./powernow.sh`: checks current battery power consumption.
-
-Unplug the laptop and run it. It should give something like this:
-
-```text
-D3Cold
-D0
-7.821 W
-```
-
-- `./bright`: Adjust OLED brightness.
-
-By default, your window manager's brightness control should work. If not, try this script which adjusts AMDgpu's backlight control. The display can go maximum 500 nits brightness.
 
 ## Improve Battery Life
 
@@ -99,7 +70,7 @@ There are some tips to improve battery life further. It's recommended to use `tl
 
 With these tweaks, the power consumption can be lowered to around 6W when idle, 7-9W when under normal load and maximum 15W when under heavy load.
 
-- Power off dGPU entirely with `pcie_down.sh` script.
+- Power off dGPU entirely with supergfxctl.
 
 - Or enable Runtime D3 power management:
 
@@ -190,6 +161,14 @@ Some fixed issues are still displayed here for reference on older kernels.
 
   Fixed in 6.15
 
+- [ ] Sway crash in Hybrid mode
+
+  The internal panel is wired to iGPU only. In hybrid mode, Sway tries to use dGPU for rendering which causes a crash.
+
 - [ ] Aquamarine (Hyprland) crash
 
   Following at this [discussion](https://github.com/hyprwm/Hyprland/discussions/10248).
+
+- [ ] Brightness control not working in Mux dGPU mode
+
+  Unresolved.
