@@ -10,6 +10,8 @@ My model is G16 Air Ryzen AI 9 version.
 
 - WM & DE: 
 
+  [COSMIC](https://system76.com/cosmic) works out of the box with no issues. Also has great support for hybrid mode and GPU switching.
+
   Most Xorg based WMs and DEs should work fine (i3, bspwm, dwm, xfce, kde, gnome etc).
 
   Sway works if you set `WLR_DRM_DEVICES` to iGPU only.
